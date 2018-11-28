@@ -8,10 +8,12 @@ import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.search.aggregation.MaxAggregation;
+import io.searchbox.core.search.aggregation.MinAggregation;
 import io.searchbox.core.search.sort.Sort;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.metrics.max.MaxBuilder;
+import org.elasticsearch.search.aggregations.metrics.min.MinBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.util.StringUtils;
 
@@ -102,7 +104,7 @@ public class ESUtils {
      * @return
      */
     public static <T> SearchResult.Hit<T, ?> findOne(JestClient jestClient, EsSearchParams params, Class<T> clazz) {
-        SearchResult searchResult = esSearchResult(jestClient, params);
+        SearchResult searchResult = searchResult(jestClient, params);
         if (searchResult.isSucceeded()) {
             List<SearchResult.Hit<T, Void>> hits = searchResult.getHits(clazz);
             if (hits != null && hits.size() > 0) {
@@ -113,15 +115,27 @@ public class ESUtils {
         return null;
     }
 
+    //搜索按照最大限制允许的数据集合
+    public static <T> List<T> searchList(JestClient jestClient, EsSearchParams params, Class<T> clazz) {
+        List<T> dataList = new ArrayList<>();
+        SearchResult result = searchResult(jestClient, params);
+        if (result == null || !result.isSucceeded()) {
+            return dataList;
+        }
+        List<SearchResult.Hit<T, Void>> hits = result.getHits(clazz);
+        dataList = ESUtils.converFromHitList(hits);
+        return dataList;
+    }
+
     /**
      * ElasticSearch搜索
      *
      * @return
      * @throws IOException
      */
-    public static <T> PageData<T> esSearch(JestClient jestClient, EsSearchParams params, Class<T> clazz) {
+    public static <T> PageData<T> searchPage(JestClient jestClient, EsSearchParams params, Class<T> clazz) {
         //long startTime = System.currentTimeMillis();//搜索开始时间
-        SearchResult result = esSearchResult(jestClient, params);
+        SearchResult result = searchResult(jestClient, params);
         if (result == null || !result.isSucceeded()) {
             return PageData.buildNull();
         }
@@ -132,7 +146,12 @@ public class ESUtils {
         }
         int page = params.getPage();
         int pageSize = params.getPageSize();
-        long total = result.getTotal();
+        long total = 0;
+        try {
+            total = result.getTotal();
+        } catch (NoSuchMethodError e) {
+            throw new RuntimeException("有问题");
+        }
 
         //logger.d("ElasticSearch Data Search time： " + (System.currentTimeMillis() - startTime) + " ms");
         return PageData.get(clazz)
@@ -143,7 +162,7 @@ public class ESUtils {
                 .setDataList(dataList);
     }
 
-    public static SearchResult esSearchResult(JestClient jestClient, EsSearchParams params) {
+    public static SearchResult searchResult(JestClient jestClient, EsSearchParams params) {
         SearchSourceBuilder ssb = new SearchSourceBuilder();
         BoolQueryBuilder bqb = QueryBuilders.boolQuery();
         List<QueryBuilder> queryBuilderList = new ArrayList<>();//搜集查询条件
@@ -256,18 +275,20 @@ public class ESUtils {
                 Boolean ismax = entry.getValue();
 
                 QueryBuilder[] queryBuilders = queryBuilderListToArrays(queryBuilderList);
-//                if (ismax) {
-                //最大值
-                QueryBuilder maxQueryBuilder = createMaxQueryBuilder(jestClient, params.getIndex(), params.getType(), fieldName, queryBuilders);
-                if (maxQueryBuilder != null) {
-                    bqb.must(maxQueryBuilder);
-                }
+                if (ismax) {
+                    //最大值
+                    QueryBuilder maxQueryBuilder = createMaxQueryBuilder(jestClient, params.getIndex(), params.getType(), fieldName, queryBuilders);
+                    if (maxQueryBuilder != null) {
+                        bqb.must(maxQueryBuilder);
+                    }
 
-//                } else {
-//                    //最小查询没有封装 暂且还是用最大
-//                    QueryBuilder maxQueryBuilder = createMaxQueryBuilder(jestClient, params.getIndex(), params.getType(), fieldName, queryBuilders);
-//                    bqb.must(maxQueryBuilder);
-//                }
+                } else {
+                    //最小值
+                    QueryBuilder minQueryBuilder = createMinQueryBuilder(jestClient, params.getIndex(), params.getType(), fieldName, queryBuilders);
+                    if (minQueryBuilder != null) {
+                        bqb.must(minQueryBuilder);
+                    }
+                }
             }
         }
 
@@ -339,7 +360,7 @@ public class ESUtils {
     }
 
     /**
-     * 获取一个极值查询 目前只支持long类型
+     * 获取一个max极值查询 目前只支持long类型
      *
      * @param jestClient
      * @param index
@@ -351,7 +372,7 @@ public class ESUtils {
     public static QueryBuilder createMaxQueryBuilder(JestClient jestClient, String index, String type, String fieldName, QueryBuilder... queryBuilders) {
         SearchSourceBuilder ssb = new SearchSourceBuilder();
         String maxName = UUID.randomUUID().toString();
-        MaxBuilder maxCollectTime = AggregationBuilders.max(maxName).field(fieldName);
+        MaxBuilder maxBuilder = AggregationBuilders.max(maxName).field(fieldName);
         if (queryBuilders != null && queryBuilders.length > 0) {
             BoolQueryBuilder bqb = QueryBuilders.boolQuery();
             for (QueryBuilder tqb : queryBuilders) {
@@ -359,7 +380,7 @@ public class ESUtils {
             }
             ssb.query(bqb);
         }
-        ssb.aggregation(maxCollectTime).size(1);
+        ssb.aggregation(maxBuilder).size(1);
         String query = ssb.toString();
         //logger.prnln(query);
         Search search = new Search.Builder(query)
@@ -369,12 +390,55 @@ public class ESUtils {
         SearchResult result = null;
         try {
             result = jestClient.execute(search);
-            MaxAggregation newTime = result.getAggregations().getMaxAggregation(maxName);
-            Double newTimeMax = newTime.getMax();
-            if (newTimeMax != null) {
-                BigDecimal bigDecimal = new BigDecimal(newTimeMax);
+            MaxAggregation newVal = result.getAggregations().getMaxAggregation(maxName);
+            Double newValMax = newVal.getMax();
+            if (newValMax != null) {
+                BigDecimal bigDecimal = new BigDecimal(newValMax);
                 Long maxValue = Long.valueOf(bigDecimal.toPlainString());
                 return QueryBuilders.termQuery(fieldName, maxValue);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取一个max极值查询 目前只支持long类型
+     *
+     * @param jestClient
+     * @param index
+     * @param type
+     * @param fieldName
+     * @param queryBuilders
+     * @return
+     */
+    public static QueryBuilder createMinQueryBuilder(JestClient jestClient, String index, String type, String fieldName, QueryBuilder... queryBuilders) {
+        SearchSourceBuilder ssb = new SearchSourceBuilder();
+        String minName = UUID.randomUUID().toString();
+        MinBuilder minBuilder = AggregationBuilders.min(minName).field(fieldName);
+        if (queryBuilders != null && queryBuilders.length > 0) {
+            BoolQueryBuilder bqb = QueryBuilders.boolQuery();
+            for (QueryBuilder tqb : queryBuilders) {
+                bqb.must(tqb);
+            }
+            ssb.query(bqb);
+        }
+        ssb.aggregation(minBuilder).size(1);
+        String query = ssb.toString();
+        Search search = new Search.Builder(query)
+                .addIndex(index)
+                .addType(type)
+                .build();
+        SearchResult result = null;
+        try {
+            result = jestClient.execute(search);
+            MinAggregation newVal = result.getAggregations().getMinAggregation(minName);
+            Double newValMin = newVal.getMin();
+            if (newValMin != null) {
+                BigDecimal bigDecimal = new BigDecimal(newValMin);
+                Long minValue = Long.valueOf(bigDecimal.toPlainString());
+                return QueryBuilders.termQuery(fieldName, minValue);
             }
         } catch (IOException e) {
             e.printStackTrace();

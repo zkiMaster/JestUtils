@@ -45,8 +45,8 @@ public class JestUtil {
         JestUtil.jestClient = jestClient;
     }
 
-    public static void init(JestClient jestClient) {
-        JestUtil.jestClient = jestClient;
+    public static void init(JestClient client) {
+        JestUtil.jestClient = client;
     }
 
     public static JestClient createJestClient(String serverUri, int timeout) {

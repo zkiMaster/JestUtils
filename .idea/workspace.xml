@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b1fa85e-6783-4674-933d-61147bc5784a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/LoggerUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/StringUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -56,23 +53,25 @@
     <session id="-1031781303">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.1" value="4" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.open.time.1" value="5" />
+          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.3" value="1" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="1-SNAPSHOT" value="1" />
-          <entry key="java" value="15" />
+          <entry key="java" value="16" />
           <entry key="pom" value="5" />
           <entry key="xml" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="15" />
+          <entry key="JAVA" value="16" />
           <entry key="UML" value="1" />
           <entry key="XML" value="8" />
         </counts>
@@ -97,18 +96,31 @@
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="336">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="481">
+              <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2226">
-              <caret line="131" column="6" lean-forward="true" selection-start-line="131" selection-start-column="6" selection-end-line="131" selection-end-column="6" />
+            <state relative-caret-position="42">
+              <caret line="48" column="37" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="37" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#1438#1439#0" expanded="true" />
+                <element signature="e#1486#1487#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -165,11 +177,11 @@
         <option value="$PROJECT_DIR$/src/main/java/com/es/jest/model/PageParams.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/es/jest/model/EsSearchParams.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/es/jest/utils/ESUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/LoggerUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/chris/es/jest/model/EsSearchParams.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java" />
       </list>
     </option>
   </component>
@@ -194,7 +206,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -274,9 +286,9 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -331,17 +343,20 @@
       <workItem from="1543388658266" duration="7000" />
       <workItem from="1543389503236" duration="2482000" />
       <workItem from="1543392700651" duration="3213000" />
+      <workItem from="1543399653314" duration="257000" />
+      <workItem from="1543453183017" duration="634000" />
+      <workItem from="1543457597958" duration="1332000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18200000" />
+    <option name="totallyTimeSpent" value="20423000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3687023" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28396946" />
       <window_info id="Image Layers" order="1" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -358,7 +373,7 @@
       <window_info anchor="bottom" id="Docker" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3298969" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.6861063" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.685567" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Spring" order="12" weight="0.3298969" />
       <window_info anchor="bottom" id="Messages" order="13" />
@@ -477,13 +492,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
           <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="60" selection-start-line="60" selection-end-line="60" />
         </state>
       </provider>
     </entry>
@@ -996,16 +1004,27 @@
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/ESUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2226">
-          <caret line="131" column="6" lean-forward="true" selection-start-line="131" selection-start-column="6" selection-end-line="131" selection-end-column="6" />
+        <state relative-caret-position="481">
+          <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/chris/es/jest/utils/JestUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="48" column="37" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="37" />
+          <folding>
+            <element signature="e#1438#1439#0" expanded="true" />
+            <element signature="e#1486#1487#0" expanded="true" />
           </folding>
         </state>
       </provider>
